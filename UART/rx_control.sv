@@ -34,14 +34,14 @@ always_comb begin  //FSM
               end
           end
           Store_OP1_MSB:  begin
+              enable_1    =   1'd1;
+              next_state  =   Wait_OP2_LSB;
           end
           Wait_OP2_LSB:   begin
               if(rx_ready)    begin
                   next_state  =   Store_OP2_LSB;
               end
           end
-              enable_1    =   1'd1;
-              next_state  =   Wait_OP2_LSB;
           Store_OP2_LSB:  begin
               enable_2    =   1'd1;
               next_staste =   Wait_OP2_MSB;
