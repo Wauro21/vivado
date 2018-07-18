@@ -4,11 +4,11 @@ module rx_control(
     input logic clk, reset, rx_ready, //reloj de 100 [MHz] / Boton de reset / señal de envio desde UART_rx
     //input logic [7:0] rx_data, //Data chunk
     output  logic enable_0, enable_1, enable_2, enable_3, enable_4, tx_signal, //Señales de activación para los retenedores/ LSB{0,1}, MSB{2,3}, CMD{4}
-    output  logic [1:0] led_signal
+    output  logic [2:0] led_signal
   );
 enum logic [3:0] {Wait_OP1_LSB, Store_OP1_LSB, Wait_OP1_MSB, Store_OP1_MSB, Wait_OP2_LSB, Store_OP2_LSB, Wait_OP2_MSB, Store_OP2_MSB, Wait_CMD, Store_CMD, Delay_1_cycle, Trigger_TX_result} state, next_state;   
 logic delay_signal,tx_flag;
-logic [1:0] led_flag;
+logic [2:0] led_flag;
 assign led_signal   =   led_flag;
 assign tx_signal    =   tx_flag;
 always_comb begin  
@@ -94,13 +94,13 @@ always @(*)    begin //revisar si funciona
 end
 always@(posedge clk)    begin
     if (state == Wait_OP1_LSB)  begin
-        led_flag    <=  'd1;
+        led_flag    <=  'd4;
     end
     else if(state   ==  Wait_OP2_LSB)   begin
         led_flag    <=  'd2;
     end
     else if(state   ==  Wait_CMD)   begin
-        led_flag    <=  'd3;
+        led_flag    <=  'd1;
     end
  end
     
