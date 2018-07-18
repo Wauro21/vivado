@@ -1,11 +1,10 @@
 //rx_control
 //version: 0.1
 module rx_control(
-    input logic clk, reset, rx_ready //reloj de 100 [MHz] / Boton de reset / señal de envio desde UART_rx
+    input logic clk, reset, rx_ready, //reloj de 100 [MHz] / Boton de reset / señal de envio desde UART_rx
     input logic [7:0] rx_data, //Data chunk
     output  logic enable_0, enable_1, enable_2, enable_3, enable_4 //Señales de activación para los retenedores/ LSB{0,1}, MSB{2,3}, CMD{4}
   );
-endmodule
 enum logic [3:0] {Wait_OP1_LSB, Store_OP1_LSB, Wait_OP1_MSB, Store_OP1_MSB, Wait_OP2_LSB, Store_OP2_LSB, Wait_OP2_MSB, Store_OP2_MSB, Wait_CMD, Store_CMD, Delay_1_cycle, Trigger_TX_result} state, next_state;   
 logic delay_signal, tx_flag;
 always_comb begin  //FSM
@@ -44,7 +43,7 @@ always_comb begin  //FSM
           end
           Store_OP2_LSB:  begin
               enable_2    =   1'd1;
-              next_staste =   Wait_OP2_MSB;
+              next_state =   Wait_OP2_MSB;
           end
           Wait_OP2_MSB:   begin
               if  (rx_ready)  begin
@@ -87,3 +86,4 @@ always @(*)    begin
         delay_signal    <=  1'd1;
     end
 end 
+endmodule
