@@ -1,3 +1,4 @@
+
 module grid_cursor(
 	input clk, rst,
 	input restriction,
@@ -75,113 +76,29 @@ module grid_cursor(
 		pos_y_next = pos_y;
 		case(pb_buttons)
 			4'b1000: begin //arriba
-				if (restriction) begin
-					if (pos_y == 'd0) begin
-						if (pos_x == 'd2 || pos_x == 'd3 )
-							pos_y_next = 'd1;
-						else if (pos_x == 'd0 || pos_x == 'd1)
-							pos_y_next = 'd2;
-						else
-							pos_y_next = 'd3;
-					end
-					else
-						pos_y_next = pos_y - 'd1;
-				end	
-				else begin
-					if (pos_y == 'd0)
-						pos_y_next = 'd3;
-					else
-						pos_y_next = pos_y - 'd1;
-				end
+				if (pos_y == 'd0)
+					pos_y_next = 'd3;
+				else
+					pos_y_next = pos_y - 'd1;
 			end
 			
 			4'b0100: begin //abajo
-				if (restriction) begin
-					if (pos_y == 'd1) begin
-						if (pos_x == 'd2 || pos_x == 'd3 )
-							pos_y_next = 'd0;
-						else
-							pos_y_next = pos_y + 'd1;
-					end
-					else if (pos_y == 'd2) begin
-						if (pos_x == 'd0 || pos_x == 'd1)
-							pos_y_next = 'd0;
-						else
-							pos_y_next = pos_y + 'd1;
-					end
-					else begin
-						if ( pos_y == 'd3)
-							pos_y_next = 'd0;
-						else
-							pos_y_next = pos_y + 'd1;
-					end
-				end	
-				else begin
-					if (pos_y == 'd3)
-						pos_y_next = 'd0;
-					else
-						pos_y_next = pos_y + 'd1;
-				end
+				if (pos_y == 'd3)
+					pos_y_next = 'd0;
+				else
+					pos_y_next = pos_y + 'd1;
 			end
-			4'b0010: begin //izquierda
-				if (restriction) begin
-					if ( pos_y == 'd2) begin
-						if (pos_x == 'd4)
-							pos_x_next = 'd1;
-						else if (pos_x == 'd0)
-							pos_x_next = 'd5;
-						else
-							pos_x_next = pos_x - 'd1;
-					end
-					else if (pos_y == 'd3) begin
-						if (pos_x == 'd4)
-							pos_x_next = 'd5;
-						else
-							pos_x_next = pos_x - 'd1;
-					end
-					else begin
-						if (pos_x == 'd0)
-							pos_x_next = 'd5;
-						else
-							pos_x_next = pos_x - 'd1;
-					end
-				end
-				else begin
-					if (pos_x == 'd0)
-						pos_x_next = 'd5;
-					else
-						pos_x_next = pos_x - 'd1;
-				end
+			4'b0010: begin //izquierda	
+				if (pos_x == 'd0)
+					pos_x_next = 'd5;
+				else
+					pos_x_next = pos_x - 'd1;
 			end
 			4'b0001: begin // derecha
-				if (restriction) begin
-					if (pos_y == 'd2) begin
-						if (pos_x == 'd1)
-							pos_x_next = 'd4;
-						else if (pos_x == 'd5)
-							pos_x_next = 'd0;
-						else
-							pos_x_next = pos_x + 'd1;
-					end
-					else if (pos_y == 'd3) begin
-						if (pos_x == 'd5)
-							pos_x_next = 'd4;
-						else
-							pos_x_next = pos_x + 'd1;
-					end
-					else begin
-						if (pos_x == 'd5)
-							pos_x_next = 'd0;
-						else
-							pos_x_next = pos_x + 'd1;
-					end
-				end
-				else begin
-					if (pos_x == 'd5)
-						pos_x_next = 'd0;
-					else
-						pos_x_next = pos_x + 'd1;
-				end
+				if (pos_x == 'd5)
+					pos_x_next = 'd0;
+				else
+					pos_x_next = pos_x + 'd1;
 			end
 		endcase
 	end				
@@ -192,34 +109,8 @@ module grid_cursor(
 			pos_y	<=	2'd0;
 		end
 		else begin
-			if (restriction) begin
-				if ( pos_y == 'd2 && (pos_x == 'd2 || pos_x == 'd3)) begin
-					pos_y <= 'd1;
-					pos_x <= pos_x;
-				end
-				else if (pos_y == 'd3) begin
-					if (pos_x == 'd2 || pos_x == 'd3) begin
-						pos_y <= 'd1;
-						pos_x <= pos_x;
-					end
-					else if (pos_x == 'd0 || pos_x == 'd1) begin
-						pos_y <= 'd2;
-						pos_x <= pos_x;
-					end
-					else begin
-						pos_y <= pos_y_next;
-						pos_x <= pos_x_next;
-					end
-				end
-				else begin
-					pos_x <= pos_x_next;
-					pos_y <= pos_y_next;
-				end
-			end
-			else begin
-				pos_x	<=	pos_x_next;
-				pos_y	<=	pos_y_next;
-			end
+			pos_x	<= pos_x_next;
+			pos_y	<= pos_y_next;
 		end
 	end
 endmodule
