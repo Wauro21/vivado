@@ -72,14 +72,12 @@ module grid_cursor(
 		case(pos_x_next)
 			3'd0:
 				case(pos_y_next)
-					2'd2: forbidden_pos = 1'd1;
 					2'd3: forbidden_pos = 1'd1;
 					default:
 					forbidden_pos = 1'd0;
 				endcase
 			3'd1:
 				case(pos_y_next)
-					2'd2: forbidden_pos = 1'd1;
 					2'd3: forbidden_pos = 1'd1;
 					default:
 					forbidden_pos = 1'd0;
@@ -92,7 +90,7 @@ module grid_cursor(
 					forbidden_pos = 1'd0;
 				endcase
 			3'd3:
-				case(pos_y_next)|
+				case(pos_y_next)
 					2'd2: forbidden_pos = 1'd1;
 					2'd3: forbidden_pos = 1'd1;
 					default:             
@@ -150,6 +148,9 @@ module grid_cursor(
 				pos_x	<=	pos_x;
 				pos_y	<=	pos_y;
 			end
+			else if ((pos_x == 'd0 || pos_x == 'd1 || pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd3) || ((pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd2)))
+				pos_x	<=	'd0;
+				pos_y	<=	'd0;
 			else begin
 				pos_x	<=	pos_x_next;
 				pos_y	<=	pos_y_next;
