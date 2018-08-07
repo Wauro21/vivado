@@ -224,15 +224,25 @@ module grid_cursor(
 			pos_y	<=	2'd0;
 		end
 		else begin
-			if (restriction && forbidden_pos) begin 
-				//si esta activa la restriccion y se está en una posicion prohibida
-				//se ve mantiene la posicion actual del cursor
-				pos_x	<=	pos_x;
-				pos_y	<=	pos_y;
-			end
-			else if (restriction && ((pos_x == 'd0 || pos_x == 'd1 || pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd3) || ((pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd2)))) begin
-				pos_x	<=	'd0;
-				pos_y	<=	'd0;
+			if (restriction) begin
+				if ( pos_y == 'd2 && (pos_x == 'd2 || pos_x == 'd3)) begin
+					pos_y <= 'd1;
+					pos_x <= pos_x;
+				end
+				else if (pos_y == 'd3) begin
+					if (pos_x == 'd2 || pos_x == 'd3) begin
+						pos_y <= 'd1;
+						pos_x <= pos_x;
+					end
+					else if (pos_x == 'd0 || pos_x == 'd1) begin
+						pos_y <= 'd2;
+						pos_x <= pos_x;
+					end
+				end
+				else begin
+					pos_x <= pos_x_next;
+					pos_y <= pos_y_next;
+				end
 			end
 			else begin
 				pos_x	<=	pos_x_next;
