@@ -156,17 +156,64 @@ module grid_cursor(
 				end
 			end
 			4'b0010: begin //izquierda
-				if (pos_x == 'd0)
-					pos_x_next = 'd5;
-				else
-					pos_x_next = pos_x - 'd1;
+				if (restriction) begin
+					if ( pos_y == 'd2) begin
+						if (pos_x == 'd4)
+							pos_x_next = 'd1;
+						else if (pos_x == 'd0)
+							pos_x_next = 'd5;
+						else
+							pos_x_next = pos_x - 'd1;
+					end
+					else if (pos_y == 'd3) begin
+						if (pos_x == 'd4)
+							pos_x_next = 'd5;
+						else
+							pos_x_next = pos_x - 'd1;
+					end
+					else begin
+						if (pos_x == 'd0)
+							pos_x_next = 'd5;
+						else
+							pos_x_next = pos_x - 'd1;
+					end
+				end
+				else begin
+					if (pos_x == 'd0)
+						pos_x_next = 'd5;
+					else
+						pos_x_next = pos_x - 'd1;
+				end
 			end
-			
 			4'b0001: begin // derecha
-				if (pos_x == 'd5)
-					pos_x_next = 'd0;
-				else
-					pos_x_next = pos_x + 'd1;
+				if (restriction) begin
+					if (pos_y == 'd2) begin
+						if (pos_x == 'd1)
+							pos_x_next = 'd4;
+						else if (pos_x == 'd5)
+							pos_x_next = 'd0;
+						else
+							pos_x_next = pos_x + 'd1;
+					end
+					else if (pos_y == 'd3) begin
+						if (pos_x == 'd5)
+							pos_x_next = 'd4;
+						else
+							pos_x_next = pos_x + 'd1;
+					end
+					else begin
+						if (pos_x == 'd5)
+							pos_x_next = 'd0;
+						else
+							pos_x_next = pos_x + 'd1;
+					end
+				end
+				else begin
+					if (pos_x == 'd5)
+						pos_x_next = 'd0;
+					else
+						pos_x_next = pos_x + 'd1;
+				end
 			end
 		endcase
 	end				
