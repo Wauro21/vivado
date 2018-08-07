@@ -148,9 +148,10 @@ module grid_cursor(
 				pos_x	<=	pos_x;
 				pos_y	<=	pos_y;
 			end
-			else if (restriction && ((pos_x == 'd0 || pos_x == 'd1 || pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd3) || ((pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd2))))
+			else if (restriction && ((pos_x == 'd0 || pos_x == 'd1 || pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd3) || ((pos_x == 'd2 || pos_x == 'd3) && (pos_y == 'd2)))) begin
 				pos_x	<=	'd0;
 				pos_y	<=	'd0;
+			end
 			else begin
 				pos_x	<=	pos_x_next;
 				pos_y	<=	pos_y_next;
