@@ -4,51 +4,82 @@ module clock_mech(
 	input logic buttons, //temporalmente 1 bit ->original: 3
 	output logic [16:0] secs	
     );
-	localparam clock_f = 100; //clock frequency
-	localparam counter_max = ((100000000/(2*clock_f))-1);
-	localparam n_bits = $clog2(counter_max);
-	localparam mod_bits = 6;
-	logic [n_bits-1:0] counter = 'd0;
-	logic time_tic;
-	//clock divider
+	localparam cs_count_max = 999999; //1 centesima de segundo
+	localparam n_cs = $clog2(cs_count_max);
+	localparam ds_count_max = 9;
+	localparam n_ds = $clog2(ds_count_max);
+	localparam time_count_max = 59;
+	localparam tc_s = $clog2(time_count_max);
+	logic [n_cs -1 : 0] cs_count;
+	logic [n_ds -1 : 0] ds_count;
+	logic [tc_s -1 : 0] s_count;
+	logic cs_flag, ds_flag, s_flag;
 	always_ff @(posedge clk) begin
-		if(reset) begin
-			counter <= 'd0;
-			time_tic <= 'd0;
+		if (reset) begin
+			cs_count <= 'd0;
+			cs_flag <= 'd0;
 		end
-		else if (counter == counter_max) begin
-			counter <= 'd0;
-			time_tic <= ~time_tic;
+		else if ( cs_count == cs_count_max) begin
+			cs_count <= 'd0;
+			cs_flag <= 'd1;
 		end
 		else begin
-			counter <= counter + 'd1;
+			cs_count <= cs_count + 'd1;
+			cs_flag <= 'd0;
 		end
 	end
-	
-	//aca ira un bloque case 
-	//definicion temporal
-	logic [mod_bits -1:0] modifier = 'd2; //logica del modificador para ff
-	
-	//ff
-	logic [16:0] secs_pre;
-	always @(posedge time_tic) begin
-		//defaults
-		secs_pre = secs;
-		case(buttons)
-			1'b0: secs_pre = secs + 'd100;
-			1'b1: secs_pre = secs + 'd1;
-		endcase
+	//decima de segundo
+	always_ff @(posedge clk) begin
+		if (reset) begin
+			ds_count <= 'd0;
+			ds_flag <= 'd0;
+		end
+		else if ( ds_count == ds_count_max) begin
+			ds_count <= 'd0;
+			ds_flag <= 'd1;
+		end
+		else begin
+			if (cs_flag) begin
+				ds_count <= ds_count + 'd1;
+			end
+			else begin
+				ds_flag <= ds_flag;
+				ds_count <= ds_count;
+			end
+		end
 	end
-	
+	//segundo
+	always_ff @(posedge clk) begin
+		if (reset) begin
+			s_count <= 'd0;
+			s_flag <= 'd0;
+		end
+		else if ( s_count == time_count_max) begin
+			s_count <= 'd0;
+			s_flag <= 'd1;
+		end
+		else begin
+			if (s_flag) begin
+				s_count <= s_count + 'd1;
+			end
+			else begin
+				s_flag <= s_flag;
+				s_count <= s_count;
+			end
+		end
+	end
+	//actualizacion hora
 	always_ff @(posedge clk) begin
 		if (reset) begin
 			secs <= 'd0;
 		end
+		else if(s_flag) begin
+			secs <= secs + 'd1;
+		end
 		else begin
-			secs <= secs_pre;
+			secs <= secs ;
 		end
 	end
 	
-			
     
 endmodule
